@@ -2,7 +2,10 @@ var s;//variable s
 var scl = 20;//scale of 20
 var vh = window.innerHeight;//sets var vh as entire screen height
 var vw = window.innerWidth; //sets var vw as entire screen length
+var w = 500; //global width
+var h = 500; // global height
 var food;
+var fRate = 10;
 function reload(){
   location.reload();
 }
@@ -14,7 +17,7 @@ function setup(){ //setup function
 
 function draw(){//draw function
   background(0,0,128); // background color
-    frameRate(10);
+    frameRate(fRate);
     s.show();
     s.update();
     s.death();
@@ -42,6 +45,7 @@ function Snek(){ //snek constructor function
     if (d < 1) { //when the distance between snek and food is less than 1 pixel,
       this.total++;//adds 1 to the total
       document.getElementById('showScore').innerHTML = this.total;
+      fRate *= 2;
       return true;
     }
     else {
@@ -51,22 +55,6 @@ function Snek(){ //snek constructor function
   this.dir = function(x,y) {
     this.xspeed = x;
     this.yspeed = y;
-  }
-  this.death = function(){
-    //if (pos.x === 1 || pos.x === 499 || pos.y === 499 || pos.y === 1){
-      //document.getElementById('showScore').innerHTML = "SNEK DED, Hit Spacebar to Restart";
-      //noLoop;
-  //  }
-    for (var i = 0; i < this.tail.length; i ++){
-      var pos = this.tail[i];
-      var d = dist(this.x, this.y, pos.x, pos.y);
-      if (d < 1){
-        this.tail = [];
-        this.total = 0;
-        document.getElementById('showScore').innerHTML = "SNEK DED, Hit Space to Restart"
-        noLoop();
-      }
-    }
   }
   this.update = function(){
     for (var i = 0; i < this.tail.length - 1; i++) {
@@ -78,8 +66,8 @@ function Snek(){ //snek constructor function
     }
     this.x = this.x + this.xspeed * scl;
     this.y = this.y + this.yspeed * scl;
-    this.x = constrain(this.x, 0, width - scl);
-    this.y = constrain(this.y, 0, height - scl);
+   // this.x = constrain(this.x, 0, width - scl);
+  //  this.y = constrain(this.y, 0, height - scl);
   }
    this.show = function() { //this is the inherent design of snek :)
     fill(0,0,0);//color of snek
@@ -87,9 +75,29 @@ function Snek(){ //snek constructor function
       rect(this.tail[i].x, this.tail[i].y, scl, scl);
     }
     rect(this.x,this.y,scl,scl); // rect(start point of x, start point of y, how long x, how long y)
-    
   }
-  
+  this.death = function(){
+    //if (pos.x === 1 || pos.x === 499 || pos.y === 499 || pos.y === 1){
+      //document.getElementById('showScore').innerHTML = "SNEK DED, Hit Spacebar to Restart";
+      //noLoop;
+  //  }
+    if ((this.x > w - scl) || (this.x < 0) || (this.y > h - scl) || (this.y < 0)){
+      this.tail = [];
+      this.total = 0;
+      document.getElementById('showScore').innerHTML = "SNEK DED, Hit Space to Restart";
+      noLoop();
+    }
+    for (var i = 0; i < this.tail.length; i ++){
+      var pos = this.tail[i];
+      var d = dist(this.x, this.y, pos.x, pos.y);
+      if (d < 1){
+        this.tail = [];
+        this.total = 0;
+        document.getElementById('showScore').innerHTML = "SNEK DED, Hit Space to Restart";
+        noLoop();
+      }
+    }
+  }
 }
 function keyPressed(){
   if (keyCode === UP_ARROW) {//moves snek when up arrow gets pressed

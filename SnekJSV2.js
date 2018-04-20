@@ -5,9 +5,17 @@ var vw = window.innerWidth; //sets var vw as entire screen length
 var w = 500; //global width
 var h = 500; // global height
 var food;
+var eat;
+var diePls;
 var fRate = 10;
 function reload(){
   location.reload();
+}
+
+function preload(){
+  soundFormats('mp3', 'ogg');
+  eat = loadSound('eat.mp3');
+  diePls = loadSound('die.mp3');
 }
 function setup(){ //setup function
   createCanvas(500,500);//creates canvas vw wide and vh height
@@ -46,6 +54,8 @@ function Snek(){ //snek constructor function
       this.total++;//adds 1 to the total
       document.getElementById('showScore').innerHTML = this.total;
       fRate *= 2;
+      eat.soundVolume(1.0);
+      eat.play();
       return true;
     }
     else {
@@ -85,6 +95,8 @@ function Snek(){ //snek constructor function
       this.tail = [];
       this.total = 0;
       document.getElementById('showScore').innerHTML = "SNEK DED, Hit Space to Restart";
+      diePls.soundVolume(1.0);
+      diePls.play();
       noLoop();
     }
     for (var i = 0; i < this.tail.length; i ++){
